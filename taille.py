@@ -55,16 +55,7 @@ def generate_map(model, data):
         plt.ylabel("latitude", fontsize=14, rotation=0)
 
     plt.figure()
-    X = pd.DataFrame(data,
-                     columns=[
-                         "haut_tot",
-                         "haut_tronc",
-                         "fk_nomtech",
-                         "fk_stadedev",
-                         "age_estim",
-                         "fk_prec_estim"]
-                     )
-    plot_clusters(data, model.predict(X))
+    plot_clusters(data, model.labels_)
     #plt.scatter(model.cluster_centers_[:, 0], model.cluster_centers_[:, 1], c="red", s=30)
     plt.show()
     pass
