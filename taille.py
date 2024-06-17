@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
 from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 
@@ -15,8 +16,6 @@ def load_data(file_path):
                             "haut_tronc",
                             "fk_nomtech",
                             "fk_stadedev",
-                            "age_estim",
-                            "fk_prec_estim",
                             "longitude",
                             "latitude"
                         ]
@@ -30,10 +29,46 @@ def generate_model(data, k):
 
 
 def test_model(model, data):
-    ch = calinski_harabasz_score(data, model.labels_)
-    sc = silhouette_score(data, model.labels_)
-    db = davies_bouldin_score(data, model.labels_)
+    ch = calinski_harabasz_score(data, model.predict(data))
+    sc = silhouette_score(data, model.predict(data))
+    db = davies_bouldin_score(data, model.predict(data))
     return ch, sc, db
+
+
+def graphics_test(data, parameters):
+    ch_list, sc_list, db_list = [], [], []
+    train, test = train_test_split(data, test_size=0.5, train_size=0.5)
+    for parameter in parameters:
+        model = generate_model(train, **parameter)
+        ch, sc, db = test_model(model, test)
+        ch_list.append(ch)
+        sc_list.append(sc)
+        db_list.append(db)
+    # Plot un graphique
+    fig, ax1 = plt.subplots()
+    # Axe 1 : ch
+    color = 'tab:red'
+    ax1.set_xlabel("parameter")
+    ax1.set_ylabel("ch", color=color)
+    ax1.plot([2,3,4,5], ch_list, label="ch", color=color)
+    #ax1.tick_params(axis='y', labelcolor=color)
+
+    # Axe 2 : db
+    ax2 = ax1.twinx()
+    color = 'tab:blue'
+    ax2.set_ylabel("sc", color=color)
+    ax2.plot([2,3,4,5], sc_list, label="sc", color=color)
+
+    # Axe 3 : sc + db
+    ax3 = ax1.twinx()
+    color = 'tab:green'
+    ax3.set_ylabel("db", color=color)
+    ax3.plot([2,3,4,5], db_list, label="db", color=color)
+
+    ax2.set_ylim([0,max(ax2.get_ylim()[1], ax3.get_ylim()[1])])
+    ax3.set_ylim(ax2.set_ylim())
+
+    plt.show()
 
 
 def generate_map(model, data):
@@ -52,7 +87,8 @@ def generate_map(model, data):
 if __name__ == '__main__':
     d = load_data("Data_Arbre.csv")
     m = generate_model(d, 2)
-    generate_map(m, d)
+    #generate_map(m, d)
+    graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
     CH, SC, DB = test_model(m, d)
     print("Calinski-Harabasz : ", CH)
     print("Silhouette : ", SC)
