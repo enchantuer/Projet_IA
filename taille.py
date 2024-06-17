@@ -2,6 +2,8 @@ import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+
 import utils as ut
 
 
@@ -27,9 +29,23 @@ def generate_model(data, k):
     return kmeans
 
 
-def test_model(model, data):
+def test_model(m, data):
     # TODO : Metric du model
-    pass
+    X = pd.DataFrame(data,
+                     columns=[
+                         "haut_tot",
+                         "haut_tronc",
+                         "fk_nomtech",
+                         "fk_stadedev",
+                         "age_estim",
+                         "fk_prec_estim"]
+                     )
+    CH = calinski_harabasz_score(X, m.labels_)
+    print("Calinski-Harabasz : ", CH)
+    SC = silhouette_score(X, m.fit_predict(X))
+    print("Silhouette : ", SC)
+    DB = davies_bouldin_score(X, m.labels_)
+    print("Davies-Bouldin : ", DB)
 
 
 def generate_map(model, data):
@@ -55,8 +71,8 @@ def generate_map(model, data):
 
 
 if __name__ == '__main__':
-    d = load_data("Data_Arbre.csv")
-    m = generate_model(d, 2)
-    generate_map(m, d)
-
+    data = load_data("Data_Arbre.csv")
+    m = generate_model(data, 2)
+    generate_map(m, data)
+    test_model(m, data)
     pass

@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 
 def load_data(file_path):
     data = pd.read_csv(file_path)
@@ -21,3 +22,5 @@ def modif_data(data,column):
 if __name__ == "__main__":
     print(load_data("Data_Arbre.csv"))
     pass
+
+
