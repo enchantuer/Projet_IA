@@ -9,43 +9,31 @@ import utils as ut
 
 def load_data(file_path):
     # TODO : Choix des données à conservé
-    data = ut.load_data(file_path)
-    return data
+    return pd.DataFrame(ut.load_data(file_path),
+                        columns=[
+                            "haut_tot",
+                            "haut_tronc",
+                            "fk_nomtech",
+                            "fk_stadedev",
+                            "age_estim",
+                            "fk_prec_estim",
+                            "longitude",
+                            "latitude"
+                        ]
+                        )
 
 
 def generate_model(data, k):
-    # TODO : Création du model
     model = KMeans(n_clusters=k)
-    X = pd.DataFrame(data,
-                     columns=[
-                         "haut_tot",
-                         "haut_tronc",
-                         "fk_nomtech",
-                         "fk_stadedev",
-                         "age_estim",
-                         "fk_prec_estim"]
-                     )
-    kmeans = model.fit(X)
+    kmeans = model.fit(data)
     return kmeans
 
 
-def test_model(m, data):
-    # TODO : Metric du model
-    X = pd.DataFrame(data,
-                     columns=[
-                         "haut_tot",
-                         "haut_tronc",
-                         "fk_nomtech",
-                         "fk_stadedev",
-                         "age_estim",
-                         "fk_prec_estim"]
-                     )
-    CH = calinski_harabasz_score(X, m.labels_)
-    print("Calinski-Harabasz : ", CH)
-    SC = silhouette_score(X, m.fit_predict(X))
-    print("Silhouette : ", SC)
-    DB = davies_bouldin_score(X, m.labels_)
-    print("Davies-Bouldin : ", DB)
+def test_model(model, data):
+    ch = calinski_harabasz_score(data, model.labels_)
+    sc = silhouette_score(data, model.labels_)
+    db = davies_bouldin_score(data, model.labels_)
+    return ch, sc, db
 
 
 def generate_map(model, data):
@@ -62,8 +50,11 @@ def generate_map(model, data):
 
 
 if __name__ == '__main__':
-    data = load_data("Data_Arbre.csv")
-    m = generate_model(data, 2)
-    generate_map(m, data)
-    test_model(m, data)
+    d = load_data("Data_Arbre.csv")
+    m = generate_model(d, 2)
+    generate_map(m, d)
+    CH, SC, DB = test_model(m, d)
+    print("Calinski-Harabasz : ", CH)
+    print("Silhouette : ", SC)
+    print("Davies-Bouldin : ", DB)
     pass
