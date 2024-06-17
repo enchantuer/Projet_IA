@@ -1,9 +1,12 @@
 from sklearn.cluster import KMeans
-import pandas as pd
+
+import utils as ut
 
 def load_data(file_path):
-    # TODO : Traitement des données
-    return pd.read_csv(file_path)
+    # TODO : Choix des données à conservé
+    data = ut.load_data(file_path)
+
+    return data
 
 def generate_model(data_path, k):
     # TODO : Création du model
