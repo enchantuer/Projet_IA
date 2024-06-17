@@ -18,4 +18,8 @@ def test_model(model, data_path):
     # TODO : Metric du model
     pass
 
+def generate_map(model, data_path):
+    # TODO : générer la carte avec les clusters sur toutes les données
+    pass
+
 m = generate_model("Data_Arbre.csv")
