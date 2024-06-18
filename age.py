@@ -1,42 +1,64 @@
 import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
-
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import SGDClassifier
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, f1_score, precision_score, recall_score
 
 import utils as ut
 
-
 def load_data(file_path):
-    # TODO : Choix des données à conservé
-    data = ut.load_data(file_path)
-    return data
-
-def generate_model_age(data):
-    # TODO : Création du model
-    X = pd.DataFrame(data,
-                     columns=[
-                         "haut_tot",
-                         "haut_tronc",
-                         "tronc_diam",
-                         "fk_stadedev",
-                         "fk_prec_estim"]
-                     )
-    Y= pd.DataFrame(data,
+    # TODO : Choix des données à conserver
+    return pd.DataFrame(ut.load_data(file_path),
                         columns=[
-                            "age_estim"]
+                            "age_estim",
+                            "fk_prec_estim",
+                            "haut_tot",
+                            "haut_tronc",
+                            "fk_stadedev",
+                            #"longitude",
+                            #"latitude",
+                        ]
                         )
 
-    return kmeans
+def create_classes(data):
+    # Définir les bornes et les étiquettes des classes
+    bins = [0, 20, 40, 60, np.inf]
+    labels = [0, 1, 2, 3]
+
+    # Créer une nouvelle colonne 'AgeClass' pour les classes d'âge
+    data["age_class"] = pd.cut(data["age_estim"], bins=bins, labels=labels, right=False)
+
+    return data
 
 
-if __name__ == '__main__':
-    d = load_data("Data_Arbre.csv")
-    m = generate_model(d, 2)
-    #generate_map(m, d)
-    graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
-    CH, SC, DB = test_model(m, d)
-    print("Calinski-Harabasz : ", CH)
-    print("Silhouette : ", SC)
-    print("Davies-Bouldin : ", DB)
-    pass
+
+d = load_data("Data_Arbre.csv")
+create_classes(d)
+# Séparer les caractéristiques (features) et la cible (target)
+X = d.drop(columns=["age_estim", "age_class"])
+y = d["age_class"]
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Normaliser les caractéristiques
+#scaler = StandardScaler()
+#X_train = scaler.fit_transform(X_train)
+#X_test = scaler.transform(X_test)
+
+# Entraîner le modèle SGDClassifier
+modelSGD = SGDClassifier()
+modelSGD.fit(X_train, y_train)
+
+X_pred = modelSGD.predict(X_train)
+print(accuracy_score(y_train, X_pred))
+print(classification_report(y_train, X_pred))
+
+# Faire des prédictions et évaluer les performances
+#y_pred = model.predict(X_test)
+#print(classification_report(y_test, y_pred))
+#print('Accuracy:', accuracy_score(y_test, y_pred))
+
