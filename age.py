@@ -12,17 +12,31 @@ def load_data(file_path):
     data = ut.load_data(file_path)
     return data
 
-def generate_model(data, k):
+def generate_model_age(data):
     # TODO : Création du model
-    model = KMeans(n_clusters=k)
     X = pd.DataFrame(data,
                      columns=[
                          "haut_tot",
                          "haut_tronc",
-                         "fk_nomtech",
+                         "tronc_diam",
                          "fk_stadedev",
-                         "age_estim",
                          "fk_prec_estim"]
                      )
-    kmeans = model.fit(X)
+    Y= pd.DataFrame(data,
+                        columns=[
+                            "age_estim"]
+                        )
+
     return kmeans
+
+
+if __name__ == '__main__':
+    d = load_data("Data_Arbre.csv")
+    m = generate_model(d, 2)
+    #generate_map(m, d)
+    graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
+    CH, SC, DB = test_model(m, d)
+    print("Calinski-Harabasz : ", CH)
+    print("Silhouette : ", SC)
+    print("Davies-Bouldin : ", DB)
+    pass
