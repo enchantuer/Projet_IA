@@ -9,6 +9,9 @@ import numpy as np
 from sklearn import model_selection
 
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+
+from sklearn.ensemble import RandomForestClassifier
 
 def load_data(file_path):
     # TODO : Choix des données à conservé
@@ -37,6 +40,12 @@ if __name__ == '__main__':
     d = load_data("Data_Arbre.csv")
     X, Y = generate_model_age(d)
     X_train, X_test, Y_train, Y_test = X[:6000], X[6000:], Y[:6000], Y[6000:]
+    clf = RandomForestClassifier(n_estimators=10)
+    clf = clf.fit(X_train, Y_train)
+    X_pred = clf.predict(X_train)
+    print(accuracy_score(Y_train, X_pred))
+    """
+    X_train, X_test, Y_train, Y_test = X[:6000], X[6000:], Y[:6000], Y[6000:]
     SGD = SGDClassifier()
 
     SGD.fit(X_train, Y_train)
@@ -51,6 +60,6 @@ if __name__ == '__main__':
     print(accuracy_scores)
 
 
+"""
 
-    #generate_map(m, d)
     pass
