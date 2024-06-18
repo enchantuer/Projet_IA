@@ -12,7 +12,8 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import confusion_matrix
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split
+
 
 def load_data(file_path):
     # TODO : Choix des données à conservé
@@ -64,13 +65,32 @@ if __name__ == '__main__':
     y = d["age_class"]
 
     # Diviser les données en ensembles d'entraînement et de test
-    X_train, X_test, y_train, y_test = X[:6000], X[6000:], y[:6000], y[6000:]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     clf = RandomForestClassifier(n_estimators=10)
+    """
+    param_grid = {
+        'n_estimators': [10, 100, 200],  # Varier le nombre d'arbres
+        'max_depth': [None, 10, 20, 30],  # Tester différentes profondeurs maximales
+        'min_samples_split': [2, 5, 10],  # Varier le nombre minimum d'échantillons pour diviser un nœud
+        'min_samples_leaf': [1, 2, 4],  # Varier le nombre minimum d'échantillons par feuille
+        'bootstrap': [True, False]  # Tester avec et sans échantillonnage bootstrap
+    }
+
+    grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, scoring='accuracy')
+
+    grid_search.fit(X_train, y_train)
+
+    # Examen des meilleurs paramètres et du meilleur modèle
+    print("Meilleurs paramètres trouvés : ", grid_search.best_params_)
+    print("Meilleur score obtenu : ", grid_search.best_score_)
+    """
     clf = clf.fit(X_train, y_train)
     X_pred = clf.predict(X_test)
     print("Taux de classification : ",accuracy_score(y_test, X_pred))
     print("Précision (Precision), Rappel (Recall) : \n",classification_report(y_test, X_pred))
     print("Matrice de confusion : \n",confusion_matrix(y_test, X_pred))
+
+
 
 
     pass
