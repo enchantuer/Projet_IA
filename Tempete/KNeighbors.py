@@ -5,8 +5,9 @@ import numpy as np
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import confusion_matrix
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
+
 
 
 def load_data(file_path):
@@ -32,14 +33,14 @@ if __name__ == '__main__':
     X = d.drop(columns=["fk_arb_etat", "storm_class"])
     y = d["storm_class"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    clf = RandomForestClassifier(n_estimators=10)
+    neigh = KNeighborsClassifier(n_neighbors=3)
 
     param_grid = {
-        'n_estimators': [3, 10, 30],
-        'max_features': [2, 4, 6, 8]
+        'n_neighbors': [3, 10, 30],
+        'algorithm': ["auto", "ball_tree", "kd_tree", "brute"]
     }
 
-    grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, scoring='accuracy')
+    grid_search = GridSearchCV(estimator=neigh, param_grid=param_grid, scoring='accuracy')
 
     grid_search.fit(X_train, y_train)
 
@@ -47,8 +48,8 @@ if __name__ == '__main__':
     print("Meilleurs paramètres trouvés : ", grid_search.best_params_)
     print("Meilleur score obtenu : ", grid_search.best_score_)
 
-    clf = clf.fit(X_train, y_train)
-    X_pred = clf.predict(X_test)
+    neigh.fit(X, y)
+    X_pred = neigh.predict(X_test)
     print("Taux de classification : ", accuracy_score(y_test, X_pred))
     print("Précision (Precision), Rappel (Recall) : \n", classification_report(y_test, X_pred))
     print("Matrice de confusion : \n", confusion_matrix(y_test, X_pred))
