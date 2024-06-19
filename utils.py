@@ -36,9 +36,23 @@ def save_model(model, file_name):
     sio.dump(model, file=file_name)
 
 
-    liste_modif=["clc_quartier","clc_secteur","fk_arb_etat","fk_stadedev","fk_port","fk_pied","fk_situation","fk_revetement","fk_nomtech","villeca","feuillage","remarquable"]
-    for i in liste_modif:
-        modif_data(data,i)
+def get_best_model(X, y, model, params):
+    # Grid Search
+    grid_search = GridSearchCV(estimator=model, param_grid=params, scoring='accuracy')
+    # Fit les models
+    grid_search.fit(X, y)
+    # renvoie le meilleur model et le grid search
+    return grid_search.best_estimator_, grid_search
+
+
+def create_classes(data):
+    # Définir les bornes et les étiquettes des classes
+    bins = [0, 20, 40, 60, np.inf]
+    labels = [0, 1, 2, 3]
+
+    # Créer une nouvelle colonne 'AgeClass' pour les classes d'âge
+    data["age_class"] = pd.cut(data["age_estim"], bins=bins, labels=labels, right=False)
+
     return data
 
 
