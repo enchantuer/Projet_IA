@@ -15,6 +15,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
 
 
+
+
 def load_data(file_path):
     # TODO : Choix des données à conservé
     data = ut.load_data(file_path)
@@ -67,7 +69,7 @@ if __name__ == '__main__':
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     clf = RandomForestClassifier(n_estimators=10)
-    """
+    """     https://dev.to/anurag629/gridsearchcv-in-scikit-learn-a-comprehensive-guide-2a72
     param_grid = {
         'n_estimators': [10, 100, 200],  # Varier le nombre d'arbres
         'max_depth': [None, 10, 20, 30],  # Tester différentes profondeurs maximales
