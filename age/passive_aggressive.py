@@ -34,12 +34,26 @@ def create_classes(data):
 
 
 if __name__ == '__main__':
-    d = load_data("Data_Arbre.csv")
+    d = load_data("../Data_Arbre.csv")
     create_classes(d)
     X = d.drop(columns=["age_estim", "age_class"])
     y = d["age_class"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     pac = PassiveAggressiveClassifier(max_iter=1000, random_state=42)
+
+    param_grid = {
+        'max_iter': [500, 1000, 2000],
+        'C': [1, 2, 5, 10, 50]
+    }
+
+    grid_search = GridSearchCV(estimator=pac, param_grid=param_grid, scoring='accuracy')
+
+    grid_search.fit(X_train, y_train)
+
+    # Examen des meilleurs paramètres et du meilleur modèle
+    print("Meilleurs paramètres trouvés : ", grid_search.best_params_)
+    print("Meilleur score obtenu : ", grid_search.best_score_)
+
     pac.fit(X_train, y_train)
     y_pred = pac.predict(X_test)
 
