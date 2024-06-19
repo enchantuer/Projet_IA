@@ -1,4 +1,6 @@
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import classification_report, confusion_matrix
@@ -22,7 +24,7 @@ def get_best_model(X, y):
     # Grid Search
     clf = SGDClassifier()
     param_grid = {
-        'loss': ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'],
+        'loss': ['hinge', 'log_loss', 'modified_huber', 'squared_hinge', 'perceptron'],
         'penalty': ['l2', 'l1', 'elasticnet'],
         'alpha': [0.0001, 0.001, 0.01, 0.1],
     }
@@ -46,3 +48,14 @@ if __name__ == "__main__":
     y_pred = clf.predict(X_test)
     print(classification_report(y_test, y_pred))
     print(confusion_matrix(y_test, y_pred))
+
+    conf_matrix = confusion_matrix(y_test, y_pred)
+
+    # Tracer la matrice de confusion
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=["0-19", "20-39", "40-59", "60+"],
+                yticklabels=["0-19", "20-39", "40-59", "60+"])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title('Confusion Matrix SGD')
+    plt.show()

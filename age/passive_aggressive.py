@@ -2,6 +2,8 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
 
+import seaborn as sns
+import matplotlib.pyplot as plt
 import pandas as pd
 import utils as ut
 
@@ -40,3 +42,13 @@ if __name__ == '__main__':
 
     print(classification_report(y_test, y_pred))
     print(confusion_matrix(y_test, y_pred))
+
+    conf_matrix = confusion_matrix(y_test, y_pred)
+
+    # Tracer la matrice de confusion
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=["0-19", "20-39", "40-59", "60+"], yticklabels=["0-19", "20-39", "40-59", "60+"])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title('Confusion Matrix Passive Aggressive')
+    plt.show()
