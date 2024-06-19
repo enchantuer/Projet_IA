@@ -57,7 +57,7 @@ def generate_model_age(data):
 
 
 if __name__ == '__main__':
-    d = load_data("Data_Arbre.csv")
+    d = load_data("../Data_Arbre.csv")
     """
     X, y = generate_model_age(d)
     X_train, X_test, y_train, y_test = X[:6000], X[6000:], y[:6000], y[6000:]
