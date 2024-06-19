@@ -18,7 +18,7 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 
 
 def load_data(file_path):
-    # TODO : Choix des données à conservé
+    # TODO : Choix des données à conserver
     data = ut.load_data(file_path)
     return data
 
