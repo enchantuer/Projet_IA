@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import SGDClassifier
 from sklearn.svm import SVC
@@ -34,7 +34,7 @@ def create_classes(data):
 
 
 
-d = load_data("Data_Arbre.csv")
+d = load_data("../Data_Arbre.csv")
 create_classes(d)
 # Séparer les caractéristiques (features) et la cible (target)
 X = d.drop(columns=["age_estim", "age_class"])
@@ -44,6 +44,21 @@ y = d["age_class"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 modelSVM = SVC(kernel="linear")
+
+param_grid = {
+    'gamma': [1, 0.1, 0.01],
+    'kernel': ['linear', 'rbf']
+        }
+
+grid_search = GridSearchCV(estimator=modelSVM, param_grid=param_grid, scoring='accuracy')
+
+grid_search.fit(X_train, y_train)
+
+# Examen des meilleurs paramètres et du meilleur modèle
+print("Meilleurs paramètres trouvés : ", grid_search.best_params_)
+print("Meilleur score obtenu : ", grid_search.best_score_)
+
+
 modelSVM.fit(X_train, y_train)
 
 y_predSVM = modelSVM.predict(X_test)
