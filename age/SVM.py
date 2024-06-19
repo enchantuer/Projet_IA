@@ -1,7 +1,8 @@
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix
-
+import seaborn as sns
+import matplotlib.pyplot as plt
 import pandas as pd
 import utils as ut
 
@@ -47,3 +48,13 @@ if __name__ == '__main__':
 
     print(classification_report(y_test, y_predSVM))
     print(confusion_matrix(y_test, y_predSVM))
+
+    conf_matrix = confusion_matrix(y_test, y_predSVM)
+
+    # Tracer la matrice de confusion
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',xticklabels=["0-19", "20-39", "40-59", "60+"], yticklabels=["0-19", "20-39", "40-59", "60+"])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title('Confusion Matrix SVM')
+    plt.show()

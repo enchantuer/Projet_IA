@@ -2,6 +2,8 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 import pandas as pd
 import utils as ut
@@ -52,3 +54,14 @@ if __name__ == '__main__':
     print("Taux de classification : ",accuracy_score(y_test, X_pred))
     print("Précision (Precision), Rappel (Recall) : \n",classification_report(y_test, X_pred))
     print("Matrice de confusion : \n",confusion_matrix(y_test, X_pred))
+
+    conf_matrix = confusion_matrix(y_test, X_pred)
+
+    # Tracer la matrice de confusion
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=["0-19", "20-39", "40-59", "60+"],
+                yticklabels=["0-19", "20-39", "40-59", "60+"])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title('Confusion Matrix Random Forest')
+    plt.show()
