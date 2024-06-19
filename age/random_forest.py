@@ -69,14 +69,11 @@ if __name__ == '__main__':
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     clf = RandomForestClassifier(n_estimators=10)
-    """     https://dev.to/anurag629/gridsearchcv-in-scikit-learn-a-comprehensive-guide-2a72
+
     param_grid = {
-        'n_estimators': [10, 100, 200],  # Varier le nombre d'arbres
-        'max_depth': [None, 10, 20, 30],  # Tester différentes profondeurs maximales
-        'min_samples_split': [2, 5, 10],  # Varier le nombre minimum d'échantillons pour diviser un nœud
-        'min_samples_leaf': [1, 2, 4],  # Varier le nombre minimum d'échantillons par feuille
-        'bootstrap': [True, False]  # Tester avec et sans échantillonnage bootstrap
-    }
+            'n_estimators': [3, 10, 30],
+            'max_features': [2, 4, 6, 8]
+        }
 
     grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, scoring='accuracy')
 
@@ -85,7 +82,7 @@ if __name__ == '__main__':
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_search.best_params_)
     print("Meilleur score obtenu : ", grid_search.best_score_)
-    """
+
     clf = clf.fit(X_train, y_train)
     X_pred = clf.predict(X_test)
     print("Taux de classification : ",accuracy_score(y_test, X_pred))
