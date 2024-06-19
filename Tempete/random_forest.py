@@ -10,9 +10,17 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 
 
 def load_data(file_path):
-    # TODO : Choix des données à conservé
-    data = ut.load_data(file_path)
-    return data
+    return pd.DataFrame(ut.load_data(file_path),
+                        columns=[
+                            "fk_arb_etat",
+                            "longitude",
+                            "latitude",
+                            "clc_secteur",
+                            "fk_stadedev",
+                            "remarquable"
+
+                        ]
+                        )
 
 
 def create_classes(data):
