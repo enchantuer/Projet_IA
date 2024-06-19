@@ -40,7 +40,7 @@ if __name__ == '__main__':
         'criterion': ["gini", "entropy", "log_loss"]
     }
 
-    grid_search = GridSearchCV(estimator=neigh, param_grid=param_grid, scoring='accuracy')
+    grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, scoring='accuracy')
 
     grid_search.fit(X_train, y_train)
 
