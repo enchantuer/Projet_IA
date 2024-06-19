@@ -6,7 +6,7 @@ from sklearn.model_selection import GridSearchCV
 import numpy as np
 
 
-def load_data(file_path, encoder=None, path_to_save_encoder="../models/norm.pkl"):
+def load_data(file_path, encoder="../models/norm.pkl", path_to_save_encoder=None):
     data = pd.read_csv(file_path)
     liste_modif = ["clc_quartier", "clc_secteur", "fk_arb_etat", "fk_stadedev", "fk_port", "fk_pied",
                    "fk_situation", "fk_revetement", "fk_nomtech", "villeca", "feuillage", "remarquable"]
