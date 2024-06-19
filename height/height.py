@@ -10,14 +10,13 @@ import utils as ut
 
 def load_data(file_path):
     # TODO : Choix des données à conservé
-    return pd.DataFrame(ut.load_data(file_path),
+    temp = ut.load_data(file_path, encoder="../models/norm.pkl")
+    return pd.DataFrame(temp,
                         columns=[
                             "haut_tot",
                             "haut_tronc",
                             "fk_nomtech",
                             "fk_stadedev",
-                            "longitude",
-                            "latitude"
                         ]
                         )
 
@@ -85,10 +84,11 @@ def generate_map(model, data):
 
 
 if __name__ == '__main__':
-    d = load_data("Data_Arbre.csv")
+    d = load_data("../Data_Arbre.csv")
     m = generate_model(d, 2)
+    ut.save_model(m, "../models/height.pkl")
     #generate_map(m, d)
-    graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
+    #graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
     CH, SC, DB = test_model(m, d)
     print("Calinski-Harabasz : ", CH)
     print("Silhouette : ", SC)
