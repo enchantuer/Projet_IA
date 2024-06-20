@@ -106,13 +106,18 @@ def create_classes_storm(data):
 def print_graph(result_grid, param_grid,  param_grid1):
     results = result_grid.cv_results_
     scores_mean = results['mean_test_score']
-    scores_std = results['std_test_score']
     params = results['params']
-    scores_mean = scores_mean.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
-    scores_std = scores_std.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
+
+    param_curve = param_grid[param_grid1[0]]
+    param_x = param_grid[param_grid1[1]]
+
+    reshape_score = {param: [] for param in param_curve}
+    for i in range(len(params)):
+        reshape_score[params[i][param_grid1[0]]].append(scores_mean[i])
+
     plt.figure(figsize=(8, 6))
-    for i, value in enumerate(param_grid[param_grid1[0]]):
-        plt.plot(param_grid[param_grid1[1]], scores_mean[i], label=f'param_grid1[0]: {value}')
+    for param in param_curve:
+        plt.plot(param_x, reshape_score[param], label=f'param_grid1[0]: {param}')
     #plt.xscale('linear')
     plt.yscale('log')
     plt.xlabel(param_grid1[1])

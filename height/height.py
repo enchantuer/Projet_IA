@@ -16,6 +16,8 @@ def load_data(file_path):
                             "haut_tronc",
                             "fk_nomtech",
                             "fk_stadedev",
+                            "longitude",
+                            "latitude"
                         ]
                         )
 
@@ -85,10 +87,17 @@ def generate_map(model, data):
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
     d = d[d.haut_tot != 0]
+    # Store coordinate for the map
+    xy = pd.DataFrame(d, columns=["longitude", "latitude"])
+    # Remove coordinate for the model
+    X = d.drop(columns=["longitude", "latitude"])
+    # Normalize the data
     d = ut.normalize_datas(d, load_file="../preprocessing/norm")
+    # Generate the model
     m = generate_model(d, 2)
     ut.save_model(m, "../models/height1.pkl")
-    #generate_map(m, d)
+    # Render the map
+    generate_map(m, xy)
     #graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
     CH, SC, DB = test_model(m, d)
     print("Calinski-Harabasz : ", CH)
