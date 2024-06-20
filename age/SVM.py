@@ -23,8 +23,9 @@ def get_best_model(X, y):
     # Grid Search
     clf = SVC()
     param_grid = {
-        'gamma': [1, 0.1, 0.01],
-        'kernel': ['linear', 'rbf']
+        'kernel': ['linear', 'rbf'],
+        'gamma': [1, 0.1, 0.01]
+
     }
     # renvoie le meilleur model et le grid search
     return ut.get_best_model(X, y, clf, param_grid)
@@ -40,7 +41,8 @@ if __name__ == '__main__':
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-    clf, grid_s = get_best_model(X_train, y_train)
+    clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
+    ut.print_graph(grid_s, param_grid0, ['kernel', 'gamma'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)

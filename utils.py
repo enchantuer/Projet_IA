@@ -79,7 +79,7 @@ def get_best_model(X, y, model, params):
     # Fit les models
     grid_search.fit(X, y)
     # renvoie le meilleur model et le grid search
-    return grid_search.best_estimator_, grid_search
+    return grid_search.best_estimator_, grid_search, params
 
 
 def create_classes_age(data):
@@ -116,7 +116,7 @@ def print_graph(result_grid, param_grid,  param_grid1):
     #plt.xscale('linear')
     plt.yscale('log')
     plt.xlabel(param_grid1[1])
-    plt.ylabel(param_grid1[0])
+    plt.ylabel('Accuracy')
     plt.title('Grid Search Accuracy Results')
     plt.legend(loc='best')
     plt.grid(True)

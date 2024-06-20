@@ -33,7 +33,10 @@ if __name__ == '__main__':
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-    clf, grid_s = get_best_model(X_train, y_train)
+    clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
+
+
+    ut.print_graph(grid_s, param_grid0, ['max_iter', 'C'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
