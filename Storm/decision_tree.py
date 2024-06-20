@@ -7,6 +7,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def load_data(file_path):
@@ -56,3 +58,14 @@ if __name__ == '__main__':
     print("Taux de classification : ", accuracy_score(y_test, y_pred))
     print("Précision (Precision), Rappel (Recall) : \n", classification_report(y_test, y_pred))
     print("Matrice de confusion : \n", confusion_matrix(y_test, y_pred))
+
+    conf_matrix = confusion_matrix(y_test, y_pred)
+
+    # Tracer la matrice de confusion
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=["pas alerte", "alerte"],
+                yticklabels=["pas alerte", "alerte"])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title('Confusion Matrix Decision Tree')
+    plt.show()
