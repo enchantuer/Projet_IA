@@ -22,7 +22,7 @@ def load_data(file_path):
                             "age_estim"
                         ]
                         )
-    return ut.create_classes(data)
+    return ut.create_classes_age(data)
 
 
 def get_best_model(X, y):
@@ -50,12 +50,12 @@ if __name__ == '__main__':
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
     print("Meilleur score obtenu : ", grid_s.best_score_)
 
-    X_pred = clf.predict(X_test)
-    print("Taux de classification : ",accuracy_score(y_test, X_pred))
-    print("Précision (Precision), Rappel (Recall) : \n",classification_report(y_test, X_pred))
-    print("Matrice de confusion : \n",confusion_matrix(y_test, X_pred))
+    y_pred = clf.predict(X_test)
+    print("Taux de classification : ",accuracy_score(y_test, y_pred))
+    print("Précision (Precision), Rappel (Recall) : \n",classification_report(y_test, y_pred))
+    print("Matrice de confusion : \n",confusion_matrix(y_test, y_pred))
 
-    conf_matrix = confusion_matrix(y_test, X_pred)
+    conf_matrix = confusion_matrix(y_test, y_pred)
 
     # Tracer la matrice de confusion
     plt.figure(figsize=(10, 7))

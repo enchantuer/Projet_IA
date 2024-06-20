@@ -16,7 +16,7 @@ def load_data(file_path):
                             "tronc_diam"
                         ]
                         )
-    return ut.create_classes(data)
+    return ut.create_classes_age(data)
 
 
 def get_best_model(X, y):
