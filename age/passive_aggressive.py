@@ -1,5 +1,5 @@
 from sklearn.linear_model import PassiveAggressiveClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 
 import seaborn as sns
@@ -44,6 +44,7 @@ if __name__ == '__main__':
 
     y_pred = clf.predict(X_test)
 
+    print("Taux de classification : ", accuracy_score(y_test, y_pred))
     print(classification_report(y_test, y_pred))
     print(confusion_matrix(y_test, y_pred))
 

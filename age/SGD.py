@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 import utils as ut
 
@@ -49,6 +49,7 @@ if __name__ == "__main__":
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
     print("Meilleur score obtenu : ", grid_s.best_score_)
     y_pred = clf.predict(X_test)
+    print("Taux de classification : ", accuracy_score(y_test, y_pred))
     print(classification_report(y_test, y_pred))
     print(confusion_matrix(y_test, y_pred))
 
