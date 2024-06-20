@@ -128,7 +128,32 @@ def print_graph(result_grid, param_grid,  param_grid1):
     plt.show()
 
 
+def parser_add_args(parser):
+    parser.add_argument('-m', '--model', help='pretrained model name')
+
+    parser.add_argument('-l', '--longitude', help='The longitude of the tree')
+    parser.add_argument('-L', '--latitude', help='The latitude of the tree')
+    parser.add_argument('-d', '--district', help='The district where the tree is planted')
+    parser.add_argument('-s', '--sector', help='The sector where the tree is planted')
+    parser.add_argument('-t', '--total_height', help='The height of the tree')
+    parser.add_argument('-H', '--log_height', help='The height of the log')
+    parser.add_argument('-R', '--diameter', help='The diameter of the log')
+    parser.add_argument('-S', '--state', help='The state of the tree')
+    parser.add_argument('-D', '--dev_state', help='The state of development of the tree')
+    parser.add_argument('-g', '--growth_form', help='The growth form of the tree')
+    parser.add_argument('-o', '--outline', help='The outline of the tree')
+    parser.add_argument('-c', '--circumstances', help='The situation of the tree')
+    parser.add_argument('-C', '--coating', help='If the coating is damaged')
+    parser.add_argument('-a', '--age', help='The estimated age of the tree')
+    parser.add_argument('-A', '--age_precision', help='The precision of the estimation of the age')
+    parser.add_argument('-N', '--nb_diag', help='The number of diagnostic of the tree')
+    parser.add_argument('-n', '--name', help='The technical name of the tree')
+    parser.add_argument('-T', '--town', help='Who take care of the tree')
+    parser.add_argument('-f', '--foliage', help='The foliage of the tree')
+    parser.add_argument('-r', '--remarkable', help='If the tree is remarkable')
+
+
 if __name__ == '__main__':
     data = load_data("Data_Arbre.csv", path_to_save_encoder="preprocessing/encode", encoder=None)
     normalized_data = normalize_datas(data, path_to_save="preprocessing/norm", load_file=None)
-    print(normalized_data.fk_nomtech)
+    print(normalized_data.longitude)

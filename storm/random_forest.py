@@ -4,20 +4,20 @@ import utils as ut
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import confusion_matrix
 
-from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 
+import matplotlib.pyplot as plt
 
 def load_data(file_path):
     data = pd.DataFrame(ut.load_data(file_path),
                         columns=[
                             "fk_arb_etat",
-                            "haut_tronc",
+                            "longitude",
+                            "latitude",
+                            "clc_secteur",
                             "fk_stadedev",
-                            "fk_pied",
-                            "fk_revetement",
-                            "fk_prec_estim",
                             "remarquable"
                         ]
                         )
@@ -26,9 +26,10 @@ def load_data(file_path):
 
 def get_best_model(X, y):
     # Grid Search
-    clf = GaussianNB()
+    clf = RandomForestClassifier()
     param_grid = {
-        #aucun paramètre à optimiser
+        'max_depth': [6, 8, 20, None],
+        'n_estimators': [10, 30, 100]
     }
     # renvoie le meilleur model et le grid search
     return ut.get_best_model(X, y, clf, param_grid)
@@ -36,7 +37,6 @@ def get_best_model(X, y):
 
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
-    d = d[d.haut_tronc != 0]
     # Séparer les caractéristiques (features) et la cible (target)
     X = d.drop(columns=["fk_arb_etat", "tempete"])
     y = d["tempete"]
@@ -44,6 +44,8 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
+
+    ut.print_graph(grid_s, param_grid0, ['max_depth', 'n_estimators'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
