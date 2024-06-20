@@ -1,31 +1,34 @@
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder
 import skops.io as sio
-from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import GridSearchCV
 import numpy as np
 
 
-def load_data(file_path, encoder="../models/norm.pkl", path_to_save_encoder=None):
+def normalise_data(data, column, load_file=None, path_to_save=None):
+    train_cat = data[[column]]
+    if load_file is None:
+        temp = OrdinalEncoder()
+        temp.fit(train_cat)
+    else:
+        temp = load_model(load_file)
+    if path_to_save is not None:
+        save_model(temp, path_to_save)
+    data[column] = temp.transform(train_cat)
+
+    return data
+
+
+def load_data(file_path, encoder=None, path_to_save_encoder=None):
     data = pd.read_csv(file_path)
     liste_modif = ["clc_quartier", "clc_secteur", "fk_arb_etat", "fk_stadedev", "fk_port", "fk_pied",
                    "fk_situation", "fk_revetement", "fk_nomtech", "villeca", "feuillage", "remarquable"]
-    if encoder is None:
-        transformer = ColumnTransformer(
-            transformers=[('oe', OrdinalEncoder(), liste_modif)],
-            remainder='passthrough'
-        )  # remainder passthrough means that all not mentioned columns will not be touched.
-        transformer.fit(data)
-        if path_to_save_encoder:
-            save_model(transformer, path_to_save_encoder)
-    elif isinstance(encoder, str):
-        transformer = load_model(encoder)
-    else:
-        transformer = encoder
-    transformed = transformer.transform(data)
-
-    return pd.DataFrame(transformed, columns=liste_modif + [col for col in data.columns if col not in liste_modif])
-
+    for col in liste_modif:
+        if encoder is None:
+            normalise_data(data, col, None, path_to_save_encoder+"/"+col+".pkl")
+        else:
+            normalise_data(data, col, encoder+"/"+col+".pkl", path_to_save_encoder)
+    return data
 
 def load_model(file_name):
     unknown_types = sio.get_untrusted_types(file=file_name)
@@ -57,4 +60,4 @@ def create_classes(data):
 
 
 if __name__ == '__main__':
-    print(load_data("Data_Arbre.csv"))
+    print(load_data("Data_Arbre.csv", encoder="norm", path_to_save_encoder=None))
