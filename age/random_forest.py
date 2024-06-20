@@ -1,4 +1,4 @@
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -29,8 +29,9 @@ def get_best_model(X, y):
     # Grid Search
     clf = RandomForestClassifier()
     param_grid = {
-            'n_estimators': [3, 10, 30],
-            'max_features': [2, 4, 6, 8]
+            'max_features': [2, 4, 6, 8],
+            'n_estimators': [3, 10, 30]
+
     }
     # renvoie le meilleur model et le grid search
     return ut.get_best_model(X, y, clf, param_grid)
@@ -38,13 +39,17 @@ def get_best_model(X, y):
 
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
+    d = d[d.haut_tot != 0]
     # Séparer les caractéristiques (features) et la cible (target)
     X = d.drop(columns=["age_estim", "age_class"])
+    X = ut.normalize_datas(X, load_file="../preprocessing/norm")
     y = d["age_class"]
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-    clf, grid_s = get_best_model(X_train, y_train)
+    clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
+
+    ut.print_graph(grid_s, param_grid0, ['max_features', 'n_estimators'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)

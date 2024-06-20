@@ -1,10 +1,9 @@
 from sklearn.linear_model import PassiveAggressiveClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pandas as pd
 import utils as ut
 
 
@@ -26,13 +25,18 @@ def get_best_model(X, y):
 
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
+    d = d[d.haut_tot != 0]
     # Séparer les caractéristiques (features) et la cible (target)
     X = d.drop(columns=["age_estim", "age_class"])
+    X = ut.normalize_datas(X, load_file="../preprocessing/norm")
     y = d["age_class"]
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-    clf, grid_s = get_best_model(X_train, y_train)
+    clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
+
+
+    ut.print_graph(grid_s, param_grid0, ['max_iter', 'C'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
@@ -40,6 +44,7 @@ if __name__ == '__main__':
 
     y_pred = clf.predict(X_test)
 
+    print("Taux de classification : ", accuracy_score(y_test, y_pred))
     print(classification_report(y_test, y_pred))
     print(confusion_matrix(y_test, y_pred))
 

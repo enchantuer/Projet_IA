@@ -9,7 +9,7 @@ import utils as ut
 
 
 def load_data(file_path):
-    temp = ut.load_data(file_path, encoder="../norm")
+    temp = ut.load_data(file_path, encoder="../preprocessing/encode")
     return pd.DataFrame(temp,
                         columns=[
                             "haut_tot",
@@ -84,6 +84,8 @@ def generate_map(model, data):
 
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
+    d = d[d.haut_tot != 0]
+    d = ut.normalize_datas(d, load_file="../preprocessing/norm")
     m = generate_model(d, 2)
     ut.save_model(m, "../models/height1.pkl")
     #generate_map(m, d)

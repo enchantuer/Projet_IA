@@ -23,9 +23,10 @@ tree = pd.DataFrame({
     "fk_nomtech": [args.tech_name],
     "fk_stadedev": [args.state_dev]
 })
-to_normalise = ["fk_nomtech", "fk_stadedev"]
-for col in to_normalise:
-    ut.normalise_data(tree, col, load_file='../norm/'+col+".pkl")
+to_encode = ["fk_nomtech", "fk_stadedev"]
+for col in to_encode:
+    ut.encode_data(tree, col, load_file='../preprocessing/encode' + col + ".pkl")
+tree = ut.normalize_datas(tree, load_file='../preprocessing/norm')
 
 if not args.model:
     args.model = "1"

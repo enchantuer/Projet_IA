@@ -1,11 +1,12 @@
 import pandas as pd
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import OrdinalEncoder, MinMaxScaler
 import skops.io as sio
 from sklearn.model_selection import GridSearchCV
 import numpy as np
+import matplotlib.pyplot as plt
 
 
-def normalise_data(data, column, load_file=None, path_to_save=None):
+def encode_data(data, column, load_file=None, path_to_save=None):
     train_cat = data[[column]]
     if load_file is None:
         temp = OrdinalEncoder()
@@ -15,7 +16,34 @@ def normalise_data(data, column, load_file=None, path_to_save=None):
     if path_to_save is not None:
         save_model(temp, path_to_save)
     data[column] = temp.transform(train_cat)
+    return data
 
+
+def normalize_data(data, column, load_file=None, path_to_save=None):
+    train_cat = data[[column]]
+    if load_file is None:
+        normalizer = MinMaxScaler()
+        normalizer.fit(train_cat)
+    else:
+        normalizer = load_model(load_file)
+    if path_to_save is not None:
+        save_model(normalizer, path_to_save)
+    data[column] = normalizer.transform(train_cat)
+    return data
+
+
+def normalize_datas(data, load_file=None, path_to_save=None):
+    for col in data.columns:
+        if load_file is None:
+            if path_to_save is None:
+                normalize_data(data, col, None, None)
+            else:
+                normalize_data(data, col, None, path_to_save + "/norm_" + col + ".pkl")
+        else:
+            if path_to_save is None:
+                normalize_data(data, col, load_file + "/norm_" + col + ".pkl", None)
+            else:
+                normalize_data(data, col, load_file + "/norm_" + col + ".pkl", path_to_save + "/norm_" + col + ".pkl")
     return data
 
 
@@ -26,14 +54,14 @@ def load_data(file_path, encoder=None, path_to_save_encoder=None):
     for col in liste_modif:
         if encoder is None:
             if path_to_save_encoder is None:
-                normalise_data(data, col, None, None)
+                encode_data(data, col, None, None)
             else:
-                normalise_data(data, col, None, path_to_save_encoder+"/"+col+".pkl")
+                encode_data(data, col, None, path_to_save_encoder + "/encode_" + col + ".pkl")
         else:
             if path_to_save_encoder is None:
-                normalise_data(data, col, encoder+"/"+col+".pkl", None)
+                encode_data(data, col, encoder + "/encode_" + col + ".pkl", None)
             else:
-                normalise_data(data, col, encoder+"/"+col+".pkl", path_to_save_encoder+"/"+col+".pkl")
+                encode_data(data, col, encoder + "/encode_" + col + ".pkl", path_to_save_encoder + "/encode_" + col + ".pkl")
     return data
 
 def load_model(file_name):
@@ -51,7 +79,7 @@ def get_best_model(X, y, model, params):
     # Fit les models
     grid_search.fit(X, y)
     # renvoie le meilleur model et le grid search
-    return grid_search.best_estimator_, grid_search
+    return grid_search.best_estimator_, grid_search, params
 
 
 def create_classes_age(data):
@@ -75,5 +103,27 @@ def create_classes_storm(data):
     return data
 
 
+def print_graph(result_grid, param_grid,  param_grid1):
+    results = result_grid.cv_results_
+    scores_mean = results['mean_test_score']
+    scores_std = results['std_test_score']
+    params = results['params']
+    scores_mean = scores_mean.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
+    scores_std = scores_std.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
+    plt.figure(figsize=(8, 6))
+    for i, value in enumerate(param_grid[param_grid1[0]]):
+        plt.plot(param_grid[param_grid1[1]], scores_mean[i], label=f'param_grid1[0]: {value}')
+    #plt.xscale('linear')
+    plt.yscale('log')
+    plt.xlabel(param_grid1[1])
+    plt.ylabel('Accuracy')
+    plt.title('Grid Search Accuracy Results')
+    plt.legend(loc='best')
+    plt.grid(True)
+    plt.show()
+
+
 if __name__ == '__main__':
-    print(load_data("Data_Arbre.csv", encoder="norm", path_to_save_encoder=None))
+    data = load_data("Data_Arbre.csv", path_to_save_encoder="preprocessing/encode", encoder=None)
+    normalized_data = normalize_datas(data, path_to_save="preprocessing/norm", load_file=None)
+    print(normalized_data.fk_nomtech)
