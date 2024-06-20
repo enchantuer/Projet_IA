@@ -9,8 +9,7 @@ import utils as ut
 
 
 def load_data(file_path):
-    # TODO : Choix des données à conservé
-    temp = ut.load_data(file_path, encoder="../models/norm.pkl")
+    temp = ut.load_data(file_path, encoder="../norm")
     return pd.DataFrame(temp,
                         columns=[
                             "haut_tot",
@@ -86,7 +85,7 @@ def generate_map(model, data):
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
     m = generate_model(d, 2)
-    ut.save_model(m, "../models/height.pkl")
+    ut.save_model(m, "../models/height1.pkl")
     #generate_map(m, d)
     #graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
     CH, SC, DB = test_model(m, d)
