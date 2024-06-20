@@ -45,6 +45,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
+    ut.save_model(clf, '../models/storm3.pkl')
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)

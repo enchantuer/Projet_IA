@@ -82,6 +82,7 @@ def generate_map(model, data):
     plt.show()
     pass
 
+import numpy as np
 
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
@@ -94,11 +95,13 @@ if __name__ == '__main__':
     X = ut.normalize_datas(X, load_file="../preprocessing/norm")
     # Generate the model
     m = generate_model(X, 2)
-    ut.save_model(m, "../models/height1.pkl")
+    print(m.cluster_centers_)
+
+    np.savetxt('data.csv', m.cluster_centers_, delimiter=',')
     # Render the map
     generate_map(m, xy)
     #graphics_test(d, [{'k': 2}, {'k': 3}, {'k': 4}, {'k': 5}])
-    CH, SC, DB = test_model(m, d)
+    CH, SC, DB = test_model(m, X)
     print("Calinski-Harabasz : ", CH)
     print("Silhouette : ", SC)
     print("Davies-Bouldin : ", DB)

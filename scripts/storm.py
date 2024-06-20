@@ -1,100 +1,51 @@
-from _ast import arg
-
 import utils as ut
 import argparse
 import pandas as pd
 
-nbr_model = 1
-
 parser = argparse.ArgumentParser(
                     prog='stormTreeAlert',
-                    description='Predict wich tree will be in danger because of the storm based on pretrained models',
+                    description='Predict which tree will be in danger because of the storm based on pretrained models',
                     epilog='Text at the bottom of help')
 ut.parser_add_args(parser)
 
-args = parser.parse_args()
-
-
-def error_missing_parameter(parameters):
-    print('Merci de fournir les parametres suivant :')
-    for parameter in parameters:
-        print('\t--', parameter)
 
 def main(args):
     # Default model
     if not args.model:
         args.model = "1"
-    # Check args
-    if args.model == "1":
-        needed = ['longitude', 'latitude', 'log_height', 'nb_diag', 'name', 'town', 'foliage']
-    elif args.model == "2":
-        needed = ['longitude', 'latitude', 'sector', 'dev_state', 'outline', 'nb_diag']
-    elif args.model == "3":
-        needed = ['log_height', 'dev_state', 'outline', 'coating', 'remarkable']
-    elif args.model == "4":
-        needed = ['longitude', 'latitude', 'sector', 'dev_state', 'remarkable']
-    else:
-        print('Merci de précisé un model valid avec : --model \"nom_du_model\"')
-        return
-    for need in needed:
-        if need not in args.__dict__:
-            error_missing_parameter(need)
-            return
-    # if not (args.longitude or args.latitude or args.sector or args.state or args.dev_state or args.remarkable):
     # Decision Tree
     if args.model == "1":
         # Edit depending on the models
-        tree = pd.DataFrame({
-            "longitude": [float(args.longitude)],
-            "latitude": [float(args.latitude)],
-            "haut_tronc": [int(args.log_height)],
-            "clc_nbr_diag": [int(args.nb_diag)],
-            "fk_nomtech": [args.name],
-            "villeca": [args.town],
-            "feuillage": [args.foliage],
-        })
-        # Edit depending on the models
+        needed = ['longitude', 'latitude', 'log_height', 'nb_diag', 'name', 'town', 'foliage']
+        to_keep = ["longitude", "latitude", "haut_tronc", "clc_nbr_diag", "fk_nomtech", "villeca", "feuillage"]
         to_encode = ["fk_nomtech", "villeca", "feuillage"]
     # KNeighbors
     elif args.model == "2":
         # Edit depending on the models
-        tree = pd.DataFrame({
-            "longitude": [float(args.longitude)],
-            "latitude": [float(args.latitude)],
-            "clc_secteur": [args.sector],
-            "fk_stadedev": [args.dev_state],
-            "fk_pied": [args.outline],
-            "clc_nbr_diag": [int(args.nb_diag)],
-        })
-        # Edit depending on the models
+        needed = ['longitude', 'latitude', 'sector', 'dev_state', 'outline', 'nb_diag']
+        to_keep = ["longitude", "latitude", "clc_secteur", "fk_stadedev", "clc_nbr_diag", "villeca"]
         to_encode = ["clc_secteur", "fk_stadedev", "fk_pied"]
     # Naive Bayes
     elif args.model == "3":
         # Edit depending on the models
-        tree = pd.DataFrame({
-            "haut_tronc": [int(args.log_height)],
-            "fk_stadedev": [args.dev_state],
-            "fk_pied": [args.outline],
-            "fk_revetement": [args.coating],
-            "remaquable": [args.remarkable],
-
-        })
-        # Edit depending on the models
-        to_encode = ["fk_stadedev", "fk_pied", "fk_revetement", "remaquable"]
+        needed = ['log_height', 'dev_state', 'outline', 'coating', 'remarkable']
+        to_keep = ["haut_tronc", "fk_stadedev", "fk_pied", "fk_revetement", "remarquable"]
+        to_encode = ["fk_stadedev", "fk_pied", "fk_revetement", "remarquable"]
     # Random Forest
     elif args.model == "4":
         # Edit depending on the models
-        tree = pd.DataFrame({
-            "longitude": [float(args.longitude)],
-            "latitude": [float(args.latitude)],
-            "clc_secteur": [args.sector],
-            "fk_stadedev": [args.dev_state],
-            "remarquable": [args.remarkable],
-
-        })
-        # Edit depending on the models
+        needed = ['longitude', 'latitude', 'sector', 'dev_state', 'remarkable']
+        to_keep = ["longitude", "latitude", "clc_secteur", "fk_stadedev", "remarquable"]
         to_encode = ["clc_secteur", "fk_stadedev", "remaquable"]
+    else:
+        print('Merci de précisé un model valid avec : --model \"nom_du_model\"')
+        return
+
     # Dont edit
+    stop = ut.check_missing_parameter(args, needed=needed)
+    if stop:
+        return
+    tree = pd.DataFrame(ut.get_trees_from_parser(args), columns=to_keep)
     for col in to_encode:
         ut.encode_data(tree, col, load_file='../preprocessing/encode/encode_' + col + ".pkl")
     tree = ut.normalize_datas(tree, load_file='../preprocessing/norm')
@@ -104,4 +55,5 @@ def main(args):
     print(clf.predict(tree))
 
 
+args = parser.parse_args()
 main(args)

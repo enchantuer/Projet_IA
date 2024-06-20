@@ -13,8 +13,8 @@ def load_data(file_path):
                             "age_estim",
                             "fk_prec_estim",
                             "haut_tot",
-                            "fk_stadedev",
-                            "tronc_diam"
+                            "tronc_diam",
+                            "fk_stadedev"
                         ]
                         )
     return ut.create_classes_age(data)
@@ -36,13 +36,14 @@ if __name__ == "__main__":
     d = load_data("../Data_Arbre.csv")
     d = d[d.haut_tot != 0]
     # Séparer les caractéristiques (features) et la cible (target)
-    X = d.drop(columns=["age_estim", "age_class"])
-    #X = ut.normalize_datas(X, load_file="../preprocessing/norm")
+    X = d.drop(columns=["age_estim", "age_class", "fk_prec_estim"])
+    X = ut.normalize_datas(X, load_file="../preprocessing/norm")
     y = d["age_class"]
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
+    ut.save_model(clf, '../models/age3.pkl')
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
     print("Meilleur score obtenu : ", grid_s.best_score_)

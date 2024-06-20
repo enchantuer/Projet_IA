@@ -131,26 +131,65 @@ def print_graph(result_grid, param_grid,  param_grid1):
 def parser_add_args(parser):
     parser.add_argument('-m', '--model', help='pretrained model name')
 
-    parser.add_argument('-l', '--longitude', help='The longitude of the tree')
-    parser.add_argument('-L', '--latitude', help='The latitude of the tree')
-    parser.add_argument('-d', '--district', help='The district where the tree is planted')
-    parser.add_argument('-s', '--sector', help='The sector where the tree is planted')
-    parser.add_argument('-t', '--total_height', help='The height of the tree')
-    parser.add_argument('-H', '--log_height', help='The height of the log')
-    parser.add_argument('-R', '--diameter', help='The diameter of the log')
-    parser.add_argument('-S', '--state', help='The state of the tree')
-    parser.add_argument('-D', '--dev_state', help='The state of development of the tree')
-    parser.add_argument('-g', '--growth_form', help='The growth form of the tree')
-    parser.add_argument('-o', '--outline', help='The outline of the tree')
-    parser.add_argument('-c', '--circumstances', help='The situation of the tree')
-    parser.add_argument('-C', '--coating', help='If the coating is damaged')
-    parser.add_argument('-a', '--age', help='The estimated age of the tree')
-    parser.add_argument('-A', '--age_precision', help='The precision of the estimation of the age')
-    parser.add_argument('-N', '--nb_diag', help='The number of diagnostic of the tree')
-    parser.add_argument('-n', '--name', help='The technical name of the tree')
-    parser.add_argument('-T', '--town', help='Who take care of the tree')
-    parser.add_argument('-f', '--foliage', help='The foliage of the tree')
-    parser.add_argument('-r', '--remarkable', help='If the tree is remarkable')
+    parser.add_argument('-l', '--longitude', help='The longitude of the tree', type=float, nargs='*')
+    parser.add_argument('-L', '--latitude', help='The latitude of the tree', type=float, nargs='*')
+    parser.add_argument('-d', '--district', help='The district where the tree is planted', type=str, nargs='*')
+    parser.add_argument('-s', '--sector', help='The sector where the tree is planted', type=str, nargs='*')
+    parser.add_argument('-t', '--total_height', help='The height of the tree', type=int, nargs='*')
+    parser.add_argument('-H', '--log_height', help='The height of the log', type=int, nargs='*')
+    parser.add_argument('-R', '--diameter', help='The diameter of the log', type=int, nargs='*')
+    parser.add_argument('-S', '--state', help='The state of the tree', type=str, nargs='*')
+    parser.add_argument('-D', '--dev_state', help='The state of development of the tree', type=str, nargs='*')
+    parser.add_argument('-g', '--growth_form', help='The growth form of the tree', type=str, nargs='*')
+    parser.add_argument('-o', '--outline', help='The outline of the tree', type=str, nargs='*')
+    parser.add_argument('-c', '--circumstances', help='The situation of the tree', type=str, nargs='*')
+    parser.add_argument('-C', '--coating', help='If the coating is damaged', type=str, nargs='*')
+    parser.add_argument('-a', '--age', help='The estimated age of the tree', type=int, nargs='*')
+    parser.add_argument('-A', '--age_precision', help='The precision of the estimation of the age', type=int, nargs='*')
+    parser.add_argument('-N', '--nb_diag', help='The number of diagnostic of the tree', type=int, nargs='*')
+    parser.add_argument('-n', '--name', help='The technical name of the tree', type=str, nargs='*')
+    parser.add_argument('-T', '--town', help='Who take care of the tree', type=str, nargs='*')
+    parser.add_argument('-f', '--foliage', help='The foliage of the tree', type=str, nargs='*')
+    parser.add_argument('-r', '--remarkable', help='If the tree is remarkable', type=str, nargs='*')
+
+
+def get_trees_from_parser(args):
+    return pd.DataFrame({
+        "longitude": args.longitude,
+        "latitude": args.latitude,
+        "clc_quartier": args.district,
+        "clc_secteur": args.sector,
+        "haut_tot": args.total_height,
+        "haut_tronc": args.log_height,
+        "tronc_diam": args.diameter,
+        "fk_arb_etat": args.state,
+        "fk_stadedev": args.dev_state,
+        "fk_port": args.growth_form,
+        "fk_pied": args.outline,
+        "fk_situation": args.circumstances,
+        "fk_revetement": args.coating,
+        "age_estim": args.age,
+        "fk_prec_estim": args.age_precision,
+        "clc_nbr_diag": args.nb_diag,
+        "fk_nomtech": args.name,
+        "villeca": args.town,
+        "feuillage": args.foliage,
+        "remarquable": args.remarkable,
+    })
+
+
+def error_missing_parameter(parameters):
+    print('Merci de fournir les parametres suivant :')
+    for parameter in parameters:
+        print('\t--', parameter)
+
+
+def check_missing_parameter(args, needed):
+    for need in needed:
+        if args.__dict__[need] is None:
+            error_missing_parameter(needed)
+            return True
+    return False
 
 
 if __name__ == '__main__':
