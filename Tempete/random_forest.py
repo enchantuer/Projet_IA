@@ -9,6 +9,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
 
 
+import matplotlib.pyplot as plt
+
 def load_data(file_path):
     return pd.DataFrame(ut.load_data(file_path),
                         columns=[
@@ -34,6 +36,26 @@ def create_classes(data):
     return data
 
 
+def print_graph(result_grid, param_grid1):
+    results = result_grid.cv_results_
+    scores_mean = results['mean_test_score']
+    scores_std = results['std_test_score']
+    params = results['params']
+    scores_mean = scores_mean.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
+    scores_std = scores_std.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
+    plt.figure(figsize=(8, 6))
+    for i, value in enumerate(param_grid[param_grid1[0]]):
+        plt.plot(param_grid[param_grid1[1]], scores_mean[i], label=f'param_grid1[0]: {value}')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel(param_grid1[1])
+    plt.ylabel(param_grid1[0])
+    plt.title('Grid Search Accuracy Results')
+    plt.legend(loc='best')
+    plt.grid(True)
+    plt.show()
+
+
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
     create_classes(d)
@@ -43,13 +65,16 @@ if __name__ == '__main__':
     clf = RandomForestClassifier(n_estimators=10)
 
     param_grid = {
-        'n_estimators': [3, 10, 30],
-        'max_features': [2, 4, 6, 8]
+        'n_estimators': [10, 30, 100],
+        'max_depth': [6, 8, 20, None]
     }
 
     grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, scoring='accuracy')
 
     grid_search.fit(X_train, y_train)
+
+    print_graph(grid_search,['n_estimators','max_depth'])
+
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_search.best_params_)
