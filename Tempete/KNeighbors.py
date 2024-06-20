@@ -44,14 +44,16 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     neigh = KNeighborsClassifier(n_neighbors=3)
 
-    param_grid = {
+    param_grid0 = {
+
         'n_neighbors': [3, 10, 30],
         'algorithm': ["auto", "ball_tree", "kd_tree", "brute"]
     }
 
-    grid_search = GridSearchCV(estimator=neigh, param_grid=param_grid, scoring='accuracy')
+    grid_search = GridSearchCV(estimator=neigh, param_grid=param_grid0, scoring='accuracy')
 
     grid_search.fit(X_train, y_train)
+    ut.print_graph(grid_search, param_grid0, ['n_neighbors', 'algorithm'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_search.best_params_)

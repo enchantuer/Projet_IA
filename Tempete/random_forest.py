@@ -65,15 +65,16 @@ if __name__ == '__main__':
     clf = RandomForestClassifier(n_estimators=10)
 
     param_grid0 = {
-        'n_estimators': [10, 30, 100],
-        'max_depth': [6, 8, 20, None]
+
+        'max_depth': [6, 8, 20, None],
+        'n_estimators': [10, 30, 100]
     }
 
     grid_search = GridSearchCV(estimator=clf, param_grid=param_grid0, scoring='accuracy')
 
     grid_search.fit(X_train, y_train)
 
-    ut.print_graph(grid_search, param_grid0,['n_estimators','max_depth'])
+    ut.print_graph(grid_search, param_grid0,['max_depth','n_estimators'])
 
 
     # Examen des meilleurs paramètres et du meilleur modèle

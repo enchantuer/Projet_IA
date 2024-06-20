@@ -113,7 +113,7 @@ def print_graph(result_grid, param_grid,  param_grid1):
     plt.figure(figsize=(8, 6))
     for i, value in enumerate(param_grid[param_grid1[0]]):
         plt.plot(param_grid[param_grid1[1]], scores_mean[i], label=f'param_grid1[0]: {value}')
-    plt.xscale('log')
+    #plt.xscale('linear')
     plt.yscale('log')
     plt.xlabel(param_grid1[1])
     plt.ylabel(param_grid1[0])
