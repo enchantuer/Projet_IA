@@ -36,6 +36,8 @@ def create_classes(data):
     return data
 
 
+
+
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
     create_classes(d)
@@ -44,14 +46,15 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     clf = DecisionTreeClassifier(random_state=0)
 
-    param_grid = {
-        'random_state': [0, 10, 30],
-        'criterion': ["gini", "entropy", "log_loss"]
+    param_grid0 = {
+        'criterion': ["gini", "entropy", "log_loss"],
+        'random_state': [0, 10, 30, 42],
     }
 
-    grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, scoring='accuracy')
+    grid_search = GridSearchCV(estimator=clf, param_grid=param_grid0, scoring='accuracy')
 
     grid_search.fit(X_train, y_train)
+    ut.print_graph(grid_search, param_grid0, ['criterion', 'random_state'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_search.best_params_)
