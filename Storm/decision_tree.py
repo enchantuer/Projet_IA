@@ -38,7 +38,6 @@ def get_best_model(X, y):
 
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
-    d = d[d.haut_tot != 0]
     # Séparer les caractéristiques (features) et la cible (target)
     X = d.drop(columns=["fk_arb_etat", "tempete"])
     y = d["tempete"]
