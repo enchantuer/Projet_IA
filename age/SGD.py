@@ -43,11 +43,11 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
-    ut.print_graph(grid_s, param_grid0, ['penalty', 'alpha'])
-
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
     print("Meilleur score obtenu : ", grid_s.best_score_)
+    ut.print_graph(grid_s, param_grid0, ['penalty', 'alpha'])
+
     y_pred = clf.predict(X_test)
     print("Taux de classification : ", accuracy_score(y_test, y_pred))
     print(classification_report(y_test, y_pred))

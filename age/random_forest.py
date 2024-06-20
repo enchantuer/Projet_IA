@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
 
-    ut.print_graph(grid_s, param_grid0, ['max_features', 'n_estimators'])
+    ut.print_graph(grid_s, param_grid0, ['n_estimators', 'max_features'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
