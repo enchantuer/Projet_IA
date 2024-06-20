@@ -3,6 +3,7 @@ from sklearn.preprocessing import OrdinalEncoder
 import skops.io as sio
 from sklearn.model_selection import GridSearchCV
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def normalise_data(data, column, load_file=None, path_to_save=None):
@@ -73,6 +74,25 @@ def create_classes_storm(data):
     data["tempete"] = pd.cut(data["fk_arb_etat"], bins=bins, labels=labels, right=False, ordered=False)
 
     return data
+
+def print_graph(result_grid, param_grid,  param_grid1):
+    results = result_grid.cv_results_
+    scores_mean = results['mean_test_score']
+    scores_std = results['std_test_score']
+    params = results['params']
+    scores_mean = scores_mean.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
+    scores_std = scores_std.reshape(len(param_grid[param_grid1[0]]), len(param_grid[param_grid1[1]]))
+    plt.figure(figsize=(8, 6))
+    for i, value in enumerate(param_grid[param_grid1[0]]):
+        plt.plot(param_grid[param_grid1[1]], scores_mean[i], label=f'param_grid1[0]: {value}')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel(param_grid1[1])
+    plt.ylabel(param_grid1[0])
+    plt.title('Grid Search Accuracy Results')
+    plt.legend(loc='best')
+    plt.grid(True)
+    plt.show()
 
 
 if __name__ == '__main__':

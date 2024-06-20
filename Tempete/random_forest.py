@@ -36,7 +36,7 @@ def create_classes(data):
     return data
 
 
-def print_graph(result_grid, param_grid1):
+"""def print_graph(result_grid, param_grid,  param_grid1):
     results = result_grid.cv_results_
     scores_mean = results['mean_test_score']
     scores_std = results['std_test_score']
@@ -54,7 +54,7 @@ def print_graph(result_grid, param_grid1):
     plt.legend(loc='best')
     plt.grid(True)
     plt.show()
-
+"""
 
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
@@ -64,16 +64,16 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     clf = RandomForestClassifier(n_estimators=10)
 
-    param_grid = {
+    param_grid0 = {
         'n_estimators': [10, 30, 100],
         'max_depth': [6, 8, 20, None]
     }
 
-    grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, scoring='accuracy')
+    grid_search = GridSearchCV(estimator=clf, param_grid=param_grid0, scoring='accuracy')
 
     grid_search.fit(X_train, y_train)
 
-    print_graph(grid_search,['n_estimators','max_depth'])
+    ut.print_graph(grid_search, param_grid0,['n_estimators','max_depth'])
 
 
     # Examen des meilleurs paramètres et du meilleur modèle
