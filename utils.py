@@ -25,9 +25,15 @@ def load_data(file_path, encoder=None, path_to_save_encoder=None):
                    "fk_situation", "fk_revetement", "fk_nomtech", "villeca", "feuillage", "remarquable"]
     for col in liste_modif:
         if encoder is None:
-            normalise_data(data, col, None, path_to_save_encoder+"/"+col+".pkl")
+            if path_to_save_encoder is None:
+                normalise_data(data, col, None, None)
+            else:
+                normalise_data(data, col, None, path_to_save_encoder+"/"+col+".pkl")
         else:
-            normalise_data(data, col, encoder+"/"+col+".pkl", path_to_save_encoder)
+            if path_to_save_encoder is None:
+                normalise_data(data, col, encoder+"/"+col+".pkl", None)
+            else:
+                normalise_data(data, col, encoder+"/"+col+".pkl", path_to_save_encoder+"/"+col+".pkl")
     return data
 
 def load_model(file_name):
@@ -48,13 +54,23 @@ def get_best_model(X, y, model, params):
     return grid_search.best_estimator_, grid_search
 
 
-def create_classes(data):
+def create_classes_age(data):
     # Définir les bornes et les étiquettes des classes
     bins = [0, 20, 40, 60, np.inf]
     labels = [0, 1, 2, 3]
 
     # Créer une nouvelle colonne 'AgeClass' pour les classes d'âge
     data["age_class"] = pd.cut(data["age_estim"], bins=bins, labels=labels, right=False)
+
+    return data
+
+def create_classes_storm(data):
+    # Définir les bornes et les étiquettes des classes
+    bins = [0, 1, 2, 3, 4, 5, 6]
+    labels = [0, 0, 1, 1, 0, 0]
+
+    # Créer une nouvelle colonne 'tempete' pour savoir si l'arbre a subit une tempete ou non
+    data["tempete"] = pd.cut(data["fk_arb_etat"], bins=bins, labels=labels, right=False, ordered=False)
 
     return data
 
