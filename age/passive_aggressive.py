@@ -10,7 +10,7 @@ import utils as ut
 
 def load_data(file_path):
     data = ut.load_data(file_path)
-    return ut.create_classes(data)
+    return ut.create_classes_age(data)
 
 
 def get_best_model(X, y):
