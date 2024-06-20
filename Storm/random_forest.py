@@ -39,8 +39,8 @@ def get_best_model(X, y):
 if __name__ == '__main__':
     d = load_data("../Data_Arbre.csv")
     # Séparer les caractéristiques (features) et la cible (target)
-    X = d.drop(columns=["fk_arb_etat", "storm_class"])
-    y = d["storm_class"]
+    X = d.drop(columns=["fk_arb_etat", "tempete"])
+    y = d["tempete"]
     # Diviser les données en ensembles d'entraînement et de test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
