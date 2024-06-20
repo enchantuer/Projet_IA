@@ -13,7 +13,6 @@ def load_data(file_path):
     return pd.DataFrame(temp,
                         columns=[
                             "haut_tot",
-                            "haut_tronc",
                             "fk_nomtech",
                             "fk_stadedev",
                             "longitude",
@@ -92,9 +91,9 @@ if __name__ == '__main__':
     # Remove coordinate for the model
     X = d.drop(columns=["longitude", "latitude"])
     # Normalize the data
-    d = ut.normalize_datas(d, load_file="../preprocessing/norm")
+    X = ut.normalize_datas(X, load_file="../preprocessing/norm")
     # Generate the model
-    m = generate_model(d, 2)
+    m = generate_model(X, 2)
     ut.save_model(m, "../models/height1.pkl")
     # Render the map
     generate_map(m, xy)
