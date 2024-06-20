@@ -40,7 +40,7 @@ tree = pd.DataFrame({
 to_normalise = ["fk_nomtech", "fk_stadedev"]
 # Dont edit
 for col in to_normalise:
-    ut.normalise_data(tree, col, load_file='../norm/'+col+".pkl")
+    ut.encode_data(tree, col, load_file='../preprocessing/' + col + ".pkl")
 # Default model
 if not args.model:
     args.model = "1"
