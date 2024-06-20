@@ -1,6 +1,6 @@
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -45,11 +45,13 @@ if __name__ == '__main__':
     ut.print_graph(grid_s, param_grid0, ['kernel', 'gamma'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
+
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
     print("Meilleur score obtenu : ", grid_s.best_score_)
 
     y_predSVM = clf.predict(X_test)
 
+    print("Taux de classification : ", accuracy_score(y_test, y_predSVM))
     print(classification_report(y_test, y_predSVM))
     print(confusion_matrix(y_test, y_predSVM))
 
