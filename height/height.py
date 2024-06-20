@@ -92,9 +92,9 @@ if __name__ == '__main__':
     # Remove coordinate for the model
     X = d.drop(columns=["longitude", "latitude"])
     # Normalize the data
-    d = ut.normalize_datas(d, load_file="../preprocessing/norm")
+    #d = ut.normalize_datas(d, load_file="../preprocessing/norm")
     # Generate the model
-    m = generate_model(d, 2)
+    m = generate_model(d, 10)
     ut.save_model(m, "../models/height1.pkl")
     # Render the map
     generate_map(m, xy)
