@@ -1,6 +1,7 @@
 import utils as ut
 from sklearn.model_selection import train_test_split
 import numpy as np
+import pandas as pd
 
 data = ut.load_data("Data_Arbre.csv", path_to_save_encoder="preprocessing/encode", encoder=None)
 ut.normalize_datas(data, path_to_save="preprocessing/norm", load_file=None)
@@ -65,6 +66,8 @@ from height import KMeans as heightKM
 # Modèle 1
 d = heightKM.load_data("Data_Arbre.csv")
 d = d[d.haut_tot != 0]
+# Store coordinate for the map
+xy = pd.DataFrame(d, columns=["longitude", "latitude"])
 # Remove coordinate for the model
 X = d.drop(columns=["longitude", "latitude"])
 # Normalize the data
@@ -72,6 +75,8 @@ X = ut.normalize_datas(X, load_file="preprocessing/norm")
 # Generate the model
 m = heightKM.generate_model(X, 2)
 np.savetxt('models/centroids1.csv', m.cluster_centers_, delimiter=',')
+# Render the map
+heightKM.generate_map(m, xy, X)
 
 
 # Storm
