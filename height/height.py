@@ -92,7 +92,7 @@ if __name__ == '__main__':
     # Remove coordinate for the model
     X = d.drop(columns=["longitude", "latitude"])
     # Normalize the data
-    X = ut.normalize_datas(X, load_file="../preprocessing/norm")
+    #X = ut.normalize_datas(X, load_file="../preprocessing/norm")
     # Generate the model
     m = generate_model(X, 2)
     print(m.cluster_centers_)

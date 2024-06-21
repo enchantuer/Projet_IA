@@ -29,8 +29,9 @@ def get_best_model(X, y):
     # Grid Search
     clf = KNeighborsClassifier()
     param_grid = {
-        'n_neighbors': [3, 10, 30],
-        'algorithm': ["auto", "ball_tree", "kd_tree", "brute"]
+        'algorithm': ["auto", "ball_tree", "kd_tree", "brute"],
+        'n_neighbors': [3, 10, 30]
+
     }
     # renvoie le meilleur model et le grid search
     return ut.get_best_model(X, y, clf, param_grid)
@@ -46,7 +47,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     clf, grid_s, param_grid0 = get_best_model(X_train, y_train)
-    ut.print_graph(grid_s, param_grid0, ['n_neighbors', 'algorithm'])
+    ut.print_graph(grid_s, param_grid0, ['algorithm', 'n_neighbors'])
 
     # Examen des meilleurs paramètres et du meilleur modèle
     print("Meilleurs paramètres trouvés : ", grid_s.best_params_)
