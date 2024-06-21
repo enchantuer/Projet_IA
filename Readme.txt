@@ -5,11 +5,17 @@ Projet fin d'année partie IA
 ### Utilisation
 Entrez en argument le nom du models et les paramètres des arbres
 #### Exemple
-`py script.py -m age3 -t 18 -R 112 -D "Adulte"`
+```bash
+py script.py -m age3 -t 18 -R 112 -D "Adulte"
+```
 
-`py script.py -m storm1 -S "EN PLACE" -L "49.840500205122" -l "3.29326360936389" -H 30 -N 0 -n "QUERUB" -T "VILLE" -f "Feuillu"`
+```bash
+py script.py -m storm1 -S "EN PLACE" -L "49.840500205122" -l "3.29326360936389" -H 30 -N 0 -n "QUERUB" -T "VILLE" -f "Feuillu"
+```
 
-`py script.py -m height1 -t 30 -n "QUERUB" -D "Jeune"`
+```bash
+py script.py -m height1 -t 30 -n "QUERUB" -D "Jeune"
+```
 
 ### Output
 Output dans le format json dans le dossier `output` sous le nom `nomdumodel.json`
