@@ -1,6 +1,8 @@
 import utils as ut
 import argparse
 import pandas as pd
+import numpy as np
+import json
 
 parser = argparse.ArgumentParser(
     prog='heightCluster',
@@ -32,9 +34,14 @@ def main(args):
         ut.encode_data(tree, col, load_file='../preprocessing/encode/encode_' + col + ".pkl")
     tree = ut.normalize_datas(tree, load_file='../preprocessing/norm')
     # Load the model
-    clf = ut.load_model("../models/height" + args.model + ".pkl")
+    centroids = np.loadtxt('../models/centroids'+args.model+'.csv', delimiter=',')
     # Print the result
-    print(clf.predict(tree))
+    res = ut.get_cluster(centroids, tree[:1])
+    json_object = json.dumps(res)
+    # Writing to sample.json
+    with open('../output/height'+args.model+'.json', "w") as outfile:
+        outfile.write(json_object)
+    print(res)
 
 
 args = parser.parse_args()

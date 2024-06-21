@@ -129,7 +129,7 @@ def print_graph(result_grid, param_grid,  param_grid1):
 
 
 def parser_add_args(parser):
-    parser.add_argument('-m', '--model', help='pretrained model name')
+    parser.add_argument('-m', '--model', help='pretrained model name and version', type=str)
 
     parser.add_argument('-l', '--longitude', help='The longitude of the tree', type=float, nargs='*')
     parser.add_argument('-L', '--latitude', help='The latitude of the tree', type=float, nargs='*')
@@ -190,6 +190,25 @@ def check_missing_parameter(args, needed):
             error_missing_parameter(needed)
             return True
     return False
+
+
+def euclidian(a, b):
+    dist = 0
+    for i in range(len(a)):
+        dist += (a[i] - b[b.columns[i]][0]) ** 2
+    dist **= 0.5
+    return dist
+
+
+def get_cluster(centroids, x):
+    min = euclidian(centroids[0], x)
+    min_index = 0
+    for i in range(len(centroids)):
+        dist = euclidian(centroids[i], x)
+        if dist < min:
+            min = dist
+            min_index = i
+    return min_index
 
 
 if __name__ == '__main__':

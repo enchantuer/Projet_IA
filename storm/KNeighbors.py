@@ -11,7 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 def load_data(file_path):
-    data = pd.DataFrame(ut.load_data(file_path),
+    data = pd.DataFrame(ut.load_data(file_path, encoder="preprocessing/encode"),
                         columns=[
                             "fk_arb_etat",
                             "longitude",
@@ -38,7 +38,7 @@ def get_best_model(X, y):
 
 
 if __name__ == '__main__':
-    d = load_data("../Data_Arbre.csv")
+    d = load_data("Data_Arbre.csv")
     # Séparer les caractéristiques (features) et la cible (target)
     X = d.drop(columns=["fk_arb_etat", "tempete"])
     y = d["tempete"]
@@ -57,7 +57,6 @@ if __name__ == '__main__':
     print("Taux de classification : ", accuracy_score(y_test, y_pred))
     print("Précision (Precision), Rappel (Recall) : \n", classification_report(y_test, y_pred))
     print("Matrice de confusion : \n", confusion_matrix(y_test, y_pred))
-
 
     conf_matrix = confusion_matrix(y_test, y_pred)
 

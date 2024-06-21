@@ -1,6 +1,7 @@
 import utils as ut
 import argparse
 import pandas as pd
+import json
 
 parser = argparse.ArgumentParser(
                     prog='agePrediction',
@@ -60,7 +61,12 @@ def main(args):
     clf = ut.load_model("../models/age" + args.model + ".pkl")
     # Print the result
     print(tree)
-    print(clf.predict(tree))
+    res = clf.predict(tree).tolist()
+    json_object = json.dumps(res, indent=4)
+    # Writing to sample.json
+    with open('../output/age'+args.model+'.json', "w") as outfile:
+        outfile.write(json_object)
+    print(res)
 
 
 main(args)

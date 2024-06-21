@@ -1,6 +1,7 @@
 import utils as ut
 import argparse
 import pandas as pd
+import json
 
 parser = argparse.ArgumentParser(
                     prog='stormTreeAlert',
@@ -52,7 +53,13 @@ def main(args):
     # Load the model
     clf = ut.load_model("../models/storm" + args.model + ".pkl")
     # Print the result
-    print(clf.predict(tree))
+    print(tree)
+    res = clf.predict(tree).tolist()
+    print(res)
+    json_object = json.dumps(res, indent=4)
+    # Writing to sample.json
+    with open('../output/storm'+args.model+'.json', "w") as outfile:
+        outfile.write(json_object)
 
 
 args = parser.parse_args()
